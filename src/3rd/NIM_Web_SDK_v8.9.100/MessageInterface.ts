@@ -80,7 +80,7 @@ export type NIM_GetHistoryMsgsOptions = {
    * 指定消息类型。默认不填写就是查找全部消息类型
    */
   msgTypes?: NIM_MsgScene[]
-  done: NIM_DefaultDoneFn<NIM_Message[]>
+  done?: NIM_DefaultDoneFn<{ msgs: NIM_Message[] }>
 }
 
 export type NIM_ResendMsgOptions = {
@@ -344,7 +344,7 @@ export type NIM_SendTextOptions = {
 export enum NIM_ENUM_MsgScene {
   p2p,
   team,
-  superTeam = 5
+  superTeam = 5,
 }
 export type NIM_MsgScene = keyof typeof NIM_ENUM_MsgScene
 

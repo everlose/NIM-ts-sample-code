@@ -17,38 +17,25 @@ export interface SessionInterface {
    *
    * 注：如果是未读数不是 0 的会话，接口生效会收到 onupdatesessions 回调，更新其未读数
    */
-  resetSessionUnread(options: NIM_ResetSessionUnreadOptions): void
+  resetSessionUnread(
+    sessionId: string,
+    done: (err: Error | null, failedSessionId: string) => void
+  ): void
   /**
    * 重置某些会话的未读数
    *
    * 注：如果是未读数不是 0 的会话，接口生效会收到 onupdatesessions 回调，更新其未读数
    */
-  resetSessionsUnread(options: NIM_ResetSessionsUnreadOptions): void
+  resetSessionsUnread(
+    sessionIds: string[],
+    done: (err: Error | null) => void
+  ): void
   /**
    * 重置所有会话的未读数
    *
    * 注：如果是未读数不是 0 的会话，接口生效会收到 onupdatesessions 回调，更新其未读数
    */
-  resetAllSessionUnread(options: { done: NIM_DefaultDoneFn<void> }): void
-}
-
-export type NIM_ResetSessionsUnreadOptions = {
-  /**
-   * 即 {@link NIM_Session.id | session.id}
-   */
-  sessionIds: string[]
-  done: NIM_DefaultDoneFn<void>
-}
-
-export type NIM_ResetSessionUnreadOptions = {
-  /**
-   * 即 {@link NIM_Session.id | session.id}
-   */
-  sessionId: string
-  /**
-   * 当同步至其他端失败，err 不为 null，且第二个参数是失败的 sessionId
-   */
-  done: (err: Error | null, failedSessionId: string) => void
+  resetAllSessionUnread(): void
 }
 
 export type NIM_GetLocalSessionsOptions = {

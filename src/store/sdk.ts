@@ -99,11 +99,12 @@ const sdk: Module<TState, TRootState> = {
           // 钩子函数-(初始化同步)收到了会话列表
           onsessions(sessions) {
             console.log('收到了 onsessions, ', sessions)
-            options.store.commit('session/setSessionList', sessions)
+            options.store.dispatch('session/onsessions', sessions)
           },
           // 钩子函数-(在线)更新会话的回调
           onupdatesessions(datas) {
             console.log('收到了 onupdatesessions, ', datas)
+            options.store.dispatch('session/onupdatesessions', datas)
           },
           // 钩子函数-(多端同步/在线)收到消息的回调
           onmsg(msg) {

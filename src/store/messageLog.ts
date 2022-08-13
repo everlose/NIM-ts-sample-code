@@ -2,6 +2,7 @@ import {
   NIM_GetHistoryMsgsOptions,
   NIM_Message,
 } from '@/3rd/NIM_Web_SDK_v8.9.100/MessageInterface'
+import { getAccountFromSessionId } from '@/utils'
 import { Module } from 'vuex'
 
 import { TRootState } from './global'
@@ -36,14 +37,19 @@ const messageLogModule: Module<TState, TRootState> = {
         messages: NIM_Message[]
       }
     ) {
-      state.msgLog[payload.sessionId] = state.msgLog[payload.sessionId].concat(
-        payload.messages
-      )
+      state.msgLog[payload.sessionId] = state.msgLog[payload.sessionId]
+        ? state.msgLog[payload.sessionId].concat(payload.messages)
+        : payload.messages
     },
   },
   actions: {
     // 获取历史消息
-    async getHistoryMsgs(context, options: NIM_GetHistoryMsgsOptions) {
+    async getHistoryMsgs(context, payload: string) {
+      const { scene, accid } = getAccountFromSessionId(payload)
+      const options: NIM_GetHistoryMsgsOptions = {
+        scene,
+        to: accid,
+      }
       if (!window.nim) {
         throw new Error('nim no login')
       }
@@ -51,17 +57,18 @@ const messageLogModule: Module<TState, TRootState> = {
         window.nim &&
           window.nim.getHistoryMsgs({
             ...options,
-            done(err, messages) {
+            done(err, result) {
               if (err) {
-                console.log('失败', err)
-                return
+                console.log('getHistory 失败', err)
+                return reject()
               }
-              console.log('成功', messages)
+              console.log('getHistory 成功', result.msgs)
               // 追加去 log 中。
               context.commit('appendMsgLog', {
-                sessionId: 11,
-                message: messages,
+                sessionId: payload,
+                messages: result.msgs,
               })
+              resolve()
             },
           })
       })

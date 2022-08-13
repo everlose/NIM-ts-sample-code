@@ -18,7 +18,7 @@ export interface NIMInterface {
    *
    * 注：这个方法仅在 disconnect 后再调用。而 getInstance 后不需要调用。
    */
-  connect(options: { done: NIM_DefaultDoneFn<StrAnyObj> }): void
+  connect(options: { done?: NIM_DefaultDoneFn<StrAnyObj> }): void
 
   /**
    * 销毁实例
@@ -39,14 +39,14 @@ export type NIM_DisconnectOptions = {
   /**
    * done 回调
    */
-  done: NIM_DefaultDoneFn<StrAnyObj>
+  done?: NIM_DefaultDoneFn<StrAnyObj>
 }
 
 export type NIM_DestroyOptions = {
   /**
    * done 回调
    */
-  done: NIM_DefaultDoneFn<StrAnyObj>
+  done?: NIM_DefaultDoneFn<StrAnyObj>
 }
 
 export type NIM_KickOptions = {
@@ -57,5 +57,5 @@ export type NIM_KickOptions = {
   /**
    * done 回调
    */
-  done: NIM_DefaultDoneFn<StrAnyObj>
+  done?: NIM_DefaultDoneFn<StrAnyObj>
 }

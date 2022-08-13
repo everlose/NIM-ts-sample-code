@@ -7,19 +7,25 @@ import {
   NIM_SendFileOptions,
   NIM_SendGEOOptions,
   NIM_SendTextOptions,
-  NIM_SendTipMsgOptions
+  NIM_SendTipMsgOptions,
 } from './MessageInterface'
-import { NIMInterface, NIM_DestroyOptions, NIM_DisconnectOptions, NIM_KickOptions } from './NIMInterface'
+import {
+  NIMInterface,
+  NIM_DestroyOptions,
+  NIM_DisconnectOptions,
+  NIM_KickOptions,
+} from './NIMInterface'
 import {
   NIM_GetLocalSessionOptions,
   NIM_GetLocalSessionsOptions,
-  NIM_ResetSessionsUnreadOptions,
-  NIM_ResetSessionUnreadOptions,
-  SessionInterface
+  SessionInterface,
 } from './SessionInterface'
 import { NIM_DefaultDoneFn, NIM_GetInstanceOptions, StrAnyObj } from './types'
 
-export class NIM extends EventEmitter implements NIMInterface, MsgInterface, SessionInterface {
+export class NIM
+  extends EventEmitter
+  implements NIMInterface, MsgInterface, SessionInterface
+{
   constructor(options: NIM_GetInstanceOptions) {
     super()
   }
@@ -32,13 +38,16 @@ export class NIM extends EventEmitter implements NIMInterface, MsgInterface, Ses
   getLocalSessions(options: NIM_GetLocalSessionsOptions): void {
     throw new Error('Method not implemented.')
   }
-  resetSessionUnread(options: NIM_ResetSessionUnreadOptions): void {
+  resetSessionUnread(
+    sessionId: string,
+    done?: (err: Error | null, failedSessionId: string) => void
+  ): void {
     throw new Error('Method not implemented.')
   }
-  resetSessionsUnread(options: NIM_ResetSessionsUnreadOptions): void {
+  resetSessionsUnread(sessionIds: string[]): void {
     throw new Error('Method not implemented.')
   }
-  resetAllSessionUnread(options: { done: NIM_DefaultDoneFn<void> }): void {
+  resetAllSessionUnread(): void {
     throw new Error('Method not implemented.')
   }
   getHistoryMsgs(options: NIM_GetHistoryMsgsOptions): void {
@@ -68,7 +77,7 @@ export class NIM extends EventEmitter implements NIMInterface, MsgInterface, Ses
   destroy(options: NIM_DestroyOptions): void {
     throw new Error('Method not implemented.')
   }
-  connect(options: { done: NIM_DefaultDoneFn<StrAnyObj> }): void {
+  connect(options: { done?: NIM_DefaultDoneFn<StrAnyObj> }): void {
     throw new Error('Method not implemented.')
   }
   kick(options: NIM_KickOptions): void {
