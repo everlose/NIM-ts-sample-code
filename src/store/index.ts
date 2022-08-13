@@ -1,9 +1,19 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
 
-export default createStore({
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-  modules: {},
-});
+import global from './global'
+import sdk from './sdk'
+import session from './session'
+import message from './message'
+import messageLog from './messageLog'
+
+const store = createStore({
+  ...global,
+  modules: {
+    sdk,
+    session,
+    message,
+    messageLog,
+  },
+})
+
+export default store
