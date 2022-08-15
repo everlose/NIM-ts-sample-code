@@ -1,5 +1,14 @@
 import { EventEmitter } from 'eventemitter3'
 import {
+  EventServiceInterface,
+  NIM_PublishEventOptions,
+  NIM_QuerySubscribeEventsByAccountsOptions,
+  NIM_QuerySubscribeEventsByTypeOptions,
+  NIM_SubscribeEventOptions,
+  NIM_UnSubscribeEventsByAccountsOptions,
+  NIM_UnSubscribeEventsByTypeOptions,
+} from './EventInterface'
+import {
   MessageInterface,
   NIM_GetHistoryMsgsOptions,
   NIM_ResendMsgOptions,
@@ -32,6 +41,7 @@ export class NIM
     NIMInterface,
     MessageInterface,
     SessionInterface,
+    EventServiceInterface,
     SystemMessageInterface
 {
   constructor(options: NIM_GetInstanceOptions) {
@@ -80,6 +90,33 @@ export class NIM
     throw new Error('Method not implemented.')
   }
   sendCustomSysMsg(options: NIM_SendCustomSysMsgOptions): void {
+    throw new Error('Method not implemented.')
+  }
+  publishEvent(options: NIM_PublishEventOptions): void {
+    throw new Error('Method not implemented.')
+  }
+  subscribeEvent(options: NIM_SubscribeEventOptions): void {
+    throw new Error('Method not implemented.')
+  }
+  unSubscribeEventsByAccounts(
+    options: NIM_UnSubscribeEventsByAccountsOptions
+  ): void {
+    throw new Error('Method not implemented.')
+  }
+  unSubscribeEventsByType(options: NIM_UnSubscribeEventsByTypeOptions): void {
+    throw new Error('Method not implemented.')
+  }
+  querySubscribeEventsByAccounts(
+    options: NIM_QuerySubscribeEventsByAccountsOptions
+  ): void {
+    throw new Error('Method not implemented.')
+  }
+  querySubscribeEventsByType(
+    options: NIM_QuerySubscribeEventsByTypeOptions
+  ): void {
+    throw new Error('Method not implemented.')
+  }
+  logout(): void {
     throw new Error('Method not implemented.')
   }
   disconnect(options: NIM_DisconnectOptions): void {

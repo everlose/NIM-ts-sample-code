@@ -1,5 +1,10 @@
-import { NIM_DefaultDoneFn } from './types'
+import { NIM_DefaultDoneFn, StrAnyObj } from './types'
 
+/**
+ * 事件相关 API
+ *
+ * 注：appkey 级别需要开通功能才可以启用。
+ */
 export interface EventServiceInterface {
   /**
    * 发布某事件
@@ -12,7 +17,9 @@ export interface EventServiceInterface {
   /**
    * 按账号取消订阅关系
    */
-  unSubscribeEventsByAccounts(options: NIM_UnSubscribeEventsByAccountsOptions): void
+  unSubscribeEventsByAccounts(
+    options: NIM_UnSubscribeEventsByAccountsOptions
+  ): void
   /**
    * 取消指定事件的全部订阅关系
    */
@@ -20,26 +27,67 @@ export interface EventServiceInterface {
   /**
    * 按账号获取指定事件的订阅关系
    */
-  querySubscribeEventsByAccounts(options: NIM_QuerySubscribeEventsByAccountsOptions): void
+  querySubscribeEventsByAccounts(
+    options: NIM_QuerySubscribeEventsByAccountsOptions
+  ): void
   /**
    * 按账号获取指定事件的订阅关系
    */
-  querySubscribeEventsByType(options: NIM_QuerySubscribeEventsByTypeOptions): void
+  querySubscribeEventsByType(
+    options: NIM_QuerySubscribeEventsByTypeOptions
+  ): void
 }
 
-export type NIM_SubscribeEvent = {
+/**
+ * 下推下来的事件定义
+ */
+export type NIM_PushEventInfo = {
+  /**
+   * 事件类型，云信预留 "1"
+   */
+  type: string
+  /**
+   * 事件状态，云信预留 "1"/"2"/"3" 来标识登陆，登出，断开链接。
+   */
+  value: string
+  /**
+   * 此事件触发的时间戳
+   */
+  time: string
+  /**
+   * 事件触发者
+   */
+  account: string
+  /**
+   * 事件触发者的客户端类型
+   */
+  clientType: string
+  /**
+   * 扩展字段，任意对象。
+   */
+  custom: StrAnyObj
+  /**
+   * 客户端生成的 id
+   */
+  idClient: string
+  /**
+   * 服务器生成的 id
+   */
+  idServer: string
+}
+
+/**
+ * 自己订阅的事件服务定义。
+ */
+export type NIM_SubscribeEventInfo = {
   /**
    * 事件类型
    */
-  type: number
+  type: string
   /**
    * 订阅有效期，秒为单位
    */
-  vaildTime: number
-  /**
-   * 是否同步
-   */
-  sync: boolean
+  subscribeTime: string
   /**
    * 被订阅人（也就是事件发布人）的 accid
    */
@@ -47,24 +95,24 @@ export type NIM_SubscribeEvent = {
   /**
    * 订阅此事件的时间戳
    */
-  time: number
+  time: string
 }
 
 export type NIM_QuerySubscribeEventsByTypeOptions = {
   /**
-   * 事件类型, 必须指定100000以上
+   * 事件类型
    */
   type: number
-  done?: NIM_DefaultDoneFn<NIM_SubscribeEvent[]>
+  done?: NIM_DefaultDoneFn<NIM_SubscribeEventInfo[]>
 }
 
 export type NIM_QuerySubscribeEventsByAccountsOptions = {
   /**
-   * 事件类型, 必须指定100000以上
+   * 事件类型
    */
   type: number
   accounts?: string[]
-  done?: NIM_DefaultDoneFn<NIM_SubscribeEvent[]>
+  done?: NIM_DefaultDoneFn<NIM_SubscribeEventInfo[]>
 }
 
 export type NIM_UnSubscribeEventsByTypeOptions = {
@@ -93,18 +141,14 @@ export type NIM_UnSubscribeEventsByAccountsOptions = {
 
 export type NIM_SubscribeEventResult = {
   /**
-   * 事件类型
+   * 订阅失败的账号列表
    */
-  type: number
-  /**
-   * 订阅账号列表
-   */
-  accounts?: string[]
+  failedAccounts?: string[]
 }
 
 export type NIM_SubscribeEventOptions = {
   /**
-   * 事件类型, 必须指定 100000 以上
+   * 事件类型
    */
   type: number
   /**
@@ -112,7 +156,7 @@ export type NIM_SubscribeEventOptions = {
    */
   accounts: string[]
   /**
-   * 订阅关系有效期
+   * 订阅关系有效期，以秒为单位
    */
   subscribeTime?: number
   /**

@@ -1,3 +1,4 @@
+import { NIM_PushEventInfo } from './EventInterface'
 import { NIM_Message } from './MessageInterface'
 import { NIM_Session } from './SessionInterface'
 import { NIM_SystemMessage } from './SystemMessageInterface'
@@ -346,6 +347,10 @@ export type NIM_GetInstanceOptions = {
    * 注：触发更新的条件有：通过或者拒绝好友申请、接收或者拒绝入群申请、通过或者拒绝入群邀请。
    */
   onupdatesysmsg?: (data: NIM_SystemMessage) => void
+  /**
+   * 钩子函数-(初始化同步，在线)收到下推的事件服务的回调
+   */
+  onpushevents?: (result: { msgEvents: NIM_PushEventInfo[] }) => void
 
   // oncustomsysmsg
   // onofflinecustomsysmsgs

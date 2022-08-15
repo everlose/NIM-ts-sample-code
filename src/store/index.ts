@@ -5,6 +5,8 @@ import sdk from './sdk'
 import session from './session'
 import message from './message'
 import messageLog from './messageLog'
+import systemMessage from './systemMessage'
+import event from './event'
 
 const store = createStore({
   ...global,
@@ -13,6 +15,8 @@ const store = createStore({
     session,
     message,
     messageLog,
+    systemMessage,
+    event,
   },
 })
 

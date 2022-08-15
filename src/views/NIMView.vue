@@ -162,7 +162,9 @@ export default {
         appKey: '45c6af3c98409b18a84451215d0bdd6e',
         account: 'cs1',
         token: 'e10adc3949ba59abbe56e057f20f883e',
-        store,
+        // appKey: 'fe416640c8e8a72734219e1847ad2547',
+        // account: 'cs1',
+        // token: 'e10adc3949ba59abbe56e057f20f883e',
       })
     })
 

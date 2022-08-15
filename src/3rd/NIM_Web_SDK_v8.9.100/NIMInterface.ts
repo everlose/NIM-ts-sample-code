@@ -5,6 +5,12 @@ import { NIM_DefaultDoneFn, StrAnyObj } from './types'
  */
 export interface NIMInterface {
   /**
+   * 退出登录。
+   *
+   * 注：SDK 版本 v9.6.0 以下推荐先调用 logout 再调用 disconnect/destroy 来保证退出。v9.6.0 及以上不需要调用这个 API，disconnect/destroy 断开前会自动调用。
+   */
+  logout(): void
+  /**
    * 断开连接。
    *
    * 退出登录状态，并断开 websocket 连接

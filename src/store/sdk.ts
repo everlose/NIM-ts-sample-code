@@ -1,6 +1,7 @@
 import { NIM } from '@/3rd/NIM_Web_SDK_v8.9.100'
 // import { promisify } from "@/utils";
-import { Module, Store } from 'vuex'
+import { Module } from 'vuex'
+import store from './index'
 import { TRootState } from './global'
 
 window.NIM = NIM
@@ -22,7 +23,6 @@ const sdk: Module<TState, TRootState> = {
         appKey: string
         token: string
         account: string
-        store: Store<any>
       }
     ) {
       if (window.nim) {
@@ -37,6 +37,7 @@ const sdk: Module<TState, TRootState> = {
           db: true,
           debug: true,
           // 云信公网线上地址，
+          // lbsUrl: 'https://imtest.netease.im/lbs/webconf',
           // lbsUrl: 'https://imtest.netease.im/lbs/webconf',
           // 若怕 LBS 的 HTTP 连接被运营商劫持，开发者可以自行代理传入备份的 LBS 地址。
           // lbsBackupUrlsCustomer: []
@@ -60,6 +61,9 @@ const sdk: Module<TState, TRootState> = {
 
           onconnect() {
             console.log('连接通道建立完毕')
+            // 订阅上下线状态，下面的账号 id 测试用先写死
+            // 注：新的 appkey 需要开通此功能方可使用
+            store.dispatch('event/subscribeEvent', ['cjhz1', 'cjhz11'])
           },
           onsyncdone() {
             console.log('初始化同步完成')
@@ -99,18 +103,22 @@ const sdk: Module<TState, TRootState> = {
           // 钩子函数-(初始化同步)收到了会话列表
           onsessions(sessions) {
             console.log('收到了 onsessions, ', sessions)
-            options.store.dispatch('session/onSessions', sessions)
+            store.dispatch('session/onSessions', sessions)
           },
           // 钩子函数-(在线)更新会话的回调
           onupdatesessions(datas) {
             console.log('收到了 onupdatesessions, ', datas)
-            options.store.dispatch('session/onUpdateSessions', datas)
+            store.dispatch('session/onUpdateSessions', datas)
           },
           // 钩子函数-(多端同步/在线)收到消息的回调
           onmsg(msg) {
             console.log('收到了 onmsg, ', msg)
-            options.store.dispatch('messageLog/onMsg', msg)
-            options.store.dispatch('session/onMsg', msg)
+            store.dispatch('messageLog/onMsg', msg)
+            store.dispatch('session/onMsg', msg)
+          },
+          onpushevents(datas) {
+            console.log('收到了 onpushevents, ', datas)
+            store.dispatch('event/onPushEvents', datas)
           },
         })
         window.nim = nim
@@ -122,7 +130,8 @@ const sdk: Module<TState, TRootState> = {
       if (!nim) {
         throw new Error('No login')
       }
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
+        nim.logout()
         nim.disconnect({
           done() {
             console.log('success disconnect')
