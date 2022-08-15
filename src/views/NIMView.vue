@@ -27,6 +27,10 @@
     </div>
     <div class="chat-wrap">
       <div class="chat-msgs-wrap">
+        <button @click="loadMore" v-if="currentMessagesTag.hasMore">
+          加载下一页
+        </button>
+        <div v-else style="color: #999">没有更多消息了.....</div>
         <div
           v-for="msg in currentMessages"
           :key="msg.idClient"
@@ -59,10 +63,6 @@
 
             <div class="msg-main-text-box">
               <div class="msg-main-text" v-html="msg.showText"></div>
-            </div>
-
-            <div v-if="msg.replyMsgIdClient" class="msg-main-reply">
-              <el-tag type="warning" class="reply-tag">Rly</el-tag>
             </div>
           </div>
         </div>
@@ -144,6 +144,13 @@ export default {
       })
     })
 
+    const currentMessagesTag = computed(
+      () =>
+        store.state.messageLog.msgLogTag[
+          store.state.session.currentSessionId
+        ] || {}
+    )
+
     // 表单元素
     const formState: UnwrapRef<FormState> = reactive({
       type: 'text',
@@ -168,13 +175,21 @@ export default {
       formState,
       currentSession,
       currentMessages,
+      currentMessagesTag,
       onMounted,
       onUnmounted,
       // 表单相关
       onSubmit: () => {
         const formdata = toRaw(formState)
         if (formdata.type === 'text') {
-          store.dispatch('message/sendText', formdata)
+          store.dispatch('message/sendText', {
+            text: formdata.text,
+            scene: currentSession.value.scene,
+            to: currentSession.value.to,
+          })
+          formdata.text = ''
+        } else if (formdata.type === 'file') {
+          // todo sendFile
         }
       },
       setCurrSession: (session: NIM_Session) => {
@@ -182,6 +197,9 @@ export default {
           session,
           store,
         })
+      },
+      loadMore: () => {
+        store.dispatch('messageLog/getHistoryMsgs', currentSession.value.id)
       },
     }
   },

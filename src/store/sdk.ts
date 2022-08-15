@@ -99,16 +99,18 @@ const sdk: Module<TState, TRootState> = {
           // 钩子函数-(初始化同步)收到了会话列表
           onsessions(sessions) {
             console.log('收到了 onsessions, ', sessions)
-            options.store.dispatch('session/onsessions', sessions)
+            options.store.dispatch('session/onSessions', sessions)
           },
           // 钩子函数-(在线)更新会话的回调
           onupdatesessions(datas) {
             console.log('收到了 onupdatesessions, ', datas)
-            options.store.dispatch('session/onupdatesessions', datas)
+            options.store.dispatch('session/onUpdateSessions', datas)
           },
           // 钩子函数-(多端同步/在线)收到消息的回调
           onmsg(msg) {
             console.log('收到了 onmsg, ', msg)
+            options.store.dispatch('messageLog/onMsg', msg)
+            options.store.dispatch('session/onMsg', msg)
           },
         })
         window.nim = nim
@@ -116,6 +118,7 @@ const sdk: Module<TState, TRootState> = {
     },
     nimLogout() {
       const nim = window.nim
+      // todo 判断连接可用：nim.isConnected()
       if (!nim) {
         throw new Error('No login')
       }

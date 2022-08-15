@@ -124,7 +124,7 @@ export type NIM_GetInstanceOptions = {
    *
    * 注：若长连接因为网络，心跳超时等原因断开，sdk 提供能力能够自动尝试重连。
    *
-   * 注2：重连的时间间隔从 1.6～8s 之间累加，每次重连将触发 onwillReconnect 事件
+   * 注2：重连的时间间隔从 1.6～8s 之间累加，每次重连将触发 onwillreconnect 事件
    */
   needReconnect?: boolean
   /**
@@ -422,7 +422,11 @@ export type NIM_GetInstanceOptions = {
 /**
  * 默认的 done 回调形式
  */
-export type NIM_DefaultDoneFn<T extends StrAnyObj | void> = (err: Error | null | StrAnyObj, data: T, ...args: any[]) => void
+export type NIM_DefaultDoneFn<T extends StrAnyObj | void> = (
+  err: Error | null | StrAnyObj,
+  data: T,
+  ...args: any[]
+) => void
 
 export enum NIM_ENUM_ClientType {
   Android = 1,
@@ -431,7 +435,7 @@ export enum NIM_ENUM_ClientType {
   WindowsPhone = 8,
   Web = 16,
   Server = 32,
-  Mac = 64
+  Mac = 64,
 }
 
 export type NIM_ClientType = keyof typeof NIM_ENUM_ClientType
@@ -516,7 +520,9 @@ export type NIM_OnDisconnectResult_other = {
    */
   message: string
 }
-export type NIM_OnDisconnectResult = NIM_OnDisconnectResult_kicked | NIM_OnDisconnectResult_other
+export type NIM_OnDisconnectResult =
+  | NIM_OnDisconnectResult_kicked
+  | NIM_OnDisconnectResult_other
 
 export type NIM_OnWillReconnectResult = {
   /**

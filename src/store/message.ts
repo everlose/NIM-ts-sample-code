@@ -1,8 +1,10 @@
 import {
+  NIM_Message,
   NIM_SendFileOptions,
   NIM_SendTextOptions,
 } from '@/3rd/NIM_Web_SDK_v8.9.100/MessageInterface'
 import { Module } from 'vuex'
+import store from './index'
 
 import { TRootState } from './global'
 
@@ -21,17 +23,22 @@ const messageModule: Module<TState, TRootState> = {
       if (!window.nim) {
         throw new Error('nim no login')
       }
-      return new Promise<void>((resolve, reject) => {
+      const message = await new Promise<NIM_Message>((resolve, reject) => {
         window.nim &&
           window.nim.sendText({
             ...options,
             done(err, msg) {
-              err
-                ? console.log('发送失败：', err)
-                : console.log('发送成功：', msg)
+              if (err) {
+                console.log('发送失败：', err)
+                reject(err)
+                return
+              }
+              console.log('发送成功：', msg)
+              resolve(msg)
             },
           })
       })
+      store.dispatch('messageLog/onMsg', message)
     },
     // 发送文件类型消息
     async sendFile(context, options: NIM_SendFileOptions) {
@@ -43,9 +50,13 @@ const messageModule: Module<TState, TRootState> = {
           window.nim.sendFile({
             ...options,
             done(err, msg) {
-              err
-                ? console.log('发送失败：', err)
-                : console.log('发送成功：', msg)
+              if (err) {
+                console.log('发送失败：', err)
+                reject(err)
+                return
+              }
+              console.log('发送成功：', msg)
+              resolve()
             },
           })
       })
