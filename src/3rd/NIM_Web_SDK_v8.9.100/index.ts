@@ -1,6 +1,6 @@
 import { EventEmitter } from 'eventemitter3'
 import {
-  MsgInterface,
+  MessageInterface,
   NIM_GetHistoryMsgsOptions,
   NIM_ResendMsgOptions,
   NIM_SendCustomMsgOptions,
@@ -20,11 +20,19 @@ import {
   NIM_GetLocalSessionsOptions,
   SessionInterface,
 } from './SessionInterface'
+import {
+  NIM_SendCustomSysMsgOptions,
+  SystemMessageInterface,
+} from './SystemMessageInterface'
 import { NIM_DefaultDoneFn, NIM_GetInstanceOptions, StrAnyObj } from './types'
 
 export class NIM
   extends EventEmitter
-  implements NIMInterface, MsgInterface, SessionInterface
+  implements
+    NIMInterface,
+    MessageInterface,
+    SessionInterface,
+    SystemMessageInterface
 {
   constructor(options: NIM_GetInstanceOptions) {
     super()
@@ -69,6 +77,9 @@ export class NIM
     throw new Error('Method not implemented.')
   }
   sendText(options: NIM_SendTextOptions): void {
+    throw new Error('Method not implemented.')
+  }
+  sendCustomSysMsg(options: NIM_SendCustomSysMsgOptions): void {
     throw new Error('Method not implemented.')
   }
   disconnect(options: NIM_DisconnectOptions): void {

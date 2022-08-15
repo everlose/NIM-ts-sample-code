@@ -1,4 +1,64 @@
-import { NIM_CommonError } from './types'
+import { NIM_MsgScene } from './MessageInterface'
+import { NIM_CommonError, NIM_DefaultDoneFn } from './types'
+
+export interface SystemMessageInterface {
+  /**
+   * 发送自定义系统通知
+   *
+   * 注，自定义系统通知(sendCustoSysmMsg)和自定义消息(sendCustomMsg)的区别如下：
+   * 1. 自定义消息属于 {@link NIM_Message | NIM_Message }, 会存储在云信服务器消息数据库中, 与其他消息一同传递给开发者，可以查询历史消息，。
+   * 2. 自定义系统通知属于 {@link NIM_SystemMessage | NIM_SystemMessage }, 用于第三方通知端侧, 不会存储在云信服务器数据库中，无法查询历史消息。SDK 仅仅负责传递这些通知。
+   */
+  sendCustomSysMsg(options: NIM_SendCustomSysMsgOptions): void
+}
+
+export type NIM_SendCustomSysMsgOptions = {
+  /**
+   * 场景，跟消息场景的一样分为 p2p, team, superTeam.
+   */
+  scene: NIM_MsgScene
+  /**
+   * 接收方，account ID，或者群号。
+   */
+  to: string
+  /**
+   * 自定义系统消息的内容，推荐传入 JSON 序列化字符串。
+   */
+  content: string
+  /**
+   * apns推送文案, 仅对接收方为iOS设备有效
+   */
+  apnsText?: string
+  /**
+   * 自定义系统通知的推送属性. 推荐传入 JSON 序列化字符串
+   */
+  pushPayload?: string
+  /**
+   * 是否只发送给在线用户. 默认为 true
+   *
+   * true. 只发送给在线用户, 如果接收方不在线, 这条通知将被丢弃。适合是“正在输入”这种场景
+   *
+   * false. 若接收方在线, 那么会立即收到该通知，若接收方不在线, 会在其上线后推送离线系统通知。
+   */
+  sendToOnlineUsersOnly?: boolean
+  /**
+   * 是否抄送. 默认 true
+   */
+  cc?: boolean
+  /**
+   * 环境变量，用于指向不同的抄送、第三方回调等配置
+   */
+  env?: string
+  /**
+   * 是否需要推送. 默认 true
+   */
+  isPushable?: boolean
+  /**
+   * 是否需要推送昵称. 默认 false
+   */
+  needPushNick?: boolean
+  done?: NIM_DefaultDoneFn<NIM_SystemMessage>
+}
 
 export enum NIM_ENUM_SystemMessageType {
   /**
@@ -62,20 +122,19 @@ export enum NIM_ENUM_SystemMessageType {
   /**
    * 自定义系统通知
    */
-  custom
+  custom,
 }
 
 export type NIM_SystemMessageType = keyof typeof NIM_ENUM_SystemMessageType
 
+/**
+ * 系统通知的定义
+ */
 export type NIM_SystemMessage = {
   /**
    * 时间戳
    */
   time: number
-  /**
-   * 系统通知类型
-   */
-  type?: NIM_SystemMessageType
   /**
    * 系统通知的来源, 账号或者群ID
    */
@@ -84,6 +143,14 @@ export type NIM_SystemMessage = {
    * 系统通知的目标, 账号或者群ID
    */
   to: string
+  /**
+   * 系统通知类型
+   */
+  type: NIM_SystemMessageType
+  /**
+   * 自定义系系统通知的场景, 参考消息场景
+   */
+  scene?: string
   /**
    * 内建系统通知的 idServer
    */
@@ -123,10 +190,7 @@ export type NIM_SystemMessage = {
      */
     custom?: string
   }
-  /**
-   * 自定义系系统通知的场景, 参考消息场景
-   */
-  scene?: string
+
   /**
    * 自定义系统通知的内容
    */
@@ -160,7 +224,7 @@ export type NIM_SystemMessage = {
    */
   sendToOnlineUsersOnly?: boolean
   /**
-   * 自定义系统通知是否抄送
+   * 自定义系统通知是否抄送. 默认 true
    */
   cc?: boolean
 }

@@ -136,7 +136,7 @@ const sdk: Module<TState, TRootState> = {
       if (!nim) {
         throw new Error('No login')
       }
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         nim &&
           nim.destroy({
             done() {
@@ -153,7 +153,7 @@ const sdk: Module<TState, TRootState> = {
       if (!nim) {
         throw new Error('No login')
       }
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         nim &&
           nim.connect({
             done() {

@@ -1,6 +1,6 @@
 import { NIM_DefaultDoneFn, StrAnyObj } from './types'
 
-export interface MsgInterface {
+export interface MessageInterface {
   /**
    * 发送文本消息
    */
